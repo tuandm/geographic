@@ -51,7 +51,7 @@ class Database {
 	 * @param   mixed   configuration array or DSN
 	 * @return  Database_Core
 	 */
-	public static function & instance($name = 'default', $config = NULL)
+	public static function &instance($name = 'default', $config = NULL)
 	{
 		if (!isset(Database::$instances[$name]))
 		{
@@ -113,7 +113,7 @@ class Database {
 				$name = $config;
 
 				$config = \Dit\Config::get('mysql');
-				
+
 				// Test the config group name
 				if ($config === NULL) {
 					throw new \Dit\Database\Exception('database.undefined_group', $name);
@@ -203,10 +203,9 @@ class Database {
 		$this->driver = new $driver($this->config);
 
 		// Validate the driver
-		if (!($this->driver instanceof \Dit\Database\Driver))
+		if (!($this->driver instanceof \Dit\Database\Driver)) {
 			throw new \Dit\Database\Exception('core.driver_implements', $this->config['connection']['type'], get_class($this), 'Database_Driver');
-
-		\Dit\Log::log('debug', 'Database Library initialized');
+		}
 	}
 
 	/**

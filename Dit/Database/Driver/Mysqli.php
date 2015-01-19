@@ -1,7 +1,8 @@
 <?php 
-
 /**
  * MySQLi Database Driver
+ * @author Tuan Duong <duongthaso@gmail.com>
+ * @package Dit
  */
 namespace Dit\Database\Driver;
 class Mysqli extends \Dit\Database\Driver\Mysql {
@@ -19,8 +20,6 @@ class Mysqli extends \Dit\Database\Driver\Mysql {
 	public function __construct($config)
 	{
 		$this->db_config = $config;
-
-		\Dit\Log::log('debug', 'MySQLi Database Driver Initialized');
 	}
 
 	/**

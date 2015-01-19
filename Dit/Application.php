@@ -13,13 +13,14 @@ class Application
      * @var \Dit\Application
      */
     private static $instance = null;
+
+    private $db = null;
     
     /**
      * Constructor
      */
     private function __construct()
     {
-
     }
 
     /**
@@ -35,10 +36,20 @@ class Application
     }
 
     /**
+     * Get database connection instance
+     * @return \Dit\Database
+     */
+    public function getDb()
+    {
+        return $this->db;
+    }
+
+    /**
      * Initialize Dit Application
      */
     public function initialize()
     {
         \Dit\Config::load();
+        $this->db = \Dit\Database::instance();
     }
 }

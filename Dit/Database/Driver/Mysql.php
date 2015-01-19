@@ -1,7 +1,8 @@
 <?php 
-
 /**
  * MySQL Database Driver
+ * @author Tuan Duong <duongthaso@gmail.com>
+ * @package Dit
  */
 namespace Dit\Database\Driver;
 class Mysql extends \Dit\Database\Driver {
@@ -24,8 +25,6 @@ class Mysql extends \Dit\Database\Driver {
 	public function __construct($config)
 	{
 		$this->db_config = $config;
-
-		\Dit\Log::log('debug', 'MySQL Database Driver Initialized');
 	}
 
 	/**

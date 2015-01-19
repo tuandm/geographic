@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Dit Database Exception class
+ * @author Tuan Duong <duongthaso@gmail.com>
+ * @package  Dit
+ */
 namespace Dit\Database;
 
 class Exception extends \Dit\Exception {
