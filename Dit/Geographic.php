@@ -125,7 +125,7 @@ class Geographic
      * @return [type] [description]
      * @throws \Dit\Exception
      */
-    public static function getSugestedRoutes()
+    public static function getSuggestedRoutes()
     {
         if (isset($_GET['userId']) && isset($_GET['bookingId'])) {
             $driverId = intval($_GET['userId']);
