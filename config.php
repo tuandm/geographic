@@ -17,5 +17,10 @@ $config = array(
         'object'        => false,
         'cache'         => false,
         'escape'        => true
+    ),
+    'google' => array(
+        'direction' => array(
+            'api_key'   => 'AIzaSyCNweXM7KA6JEZV0NET43c27vzY8WnYiSg'
+        )
     )
 );

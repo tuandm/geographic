@@ -41,6 +41,9 @@ class Application
      */
     public function getDb()
     {
+        if ($this->db === null) {
+            $this->db = \Dit\Database::instance();
+        }
         return $this->db;
     }
 
@@ -50,6 +53,5 @@ class Application
     public function initialize()
     {
         \Dit\Config::load();
-        $this->db = \Dit\Database::instance();
     }
 }
