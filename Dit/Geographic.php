@@ -3,6 +3,7 @@
  * Geographic utilities class
  * @author  Tuan Duong <duongthaso@gmail.com>
  */
+namespace Dit;
 
 class Geographic
 {
@@ -25,11 +26,11 @@ class Geographic
             
             // Get dropOff coordinates from bookingId
             $dropOffQuery = sprintf("
-                SELECT dit_store_location.p_geo_lat, dit_store_location.p_geo_long, dit_order.d_geo_lat, dit_order.d_geo_long
-                FROM dit_ship_group, dit_store_location, dit_order 
-                WHERE dit_ship_group.order_id = dit_order.order_id and 
-                dit_ship_group.store_loc_id = dit_store_location.store_loc_id and 
-                dit_ship_group.ship_group_id='%s'",
+                SELECT DIT_STORE_LOCATION.P_GEO_LAT, DIT_STORE_LOCATION.P_GEO_LONG, DIT_ORDER.D_GEO_LAT, DIT_ORDER.D_GEO_LONG
+                FROM DIT_SHIP_GROUP, DIT_STORE_LOCATION, DIT_ORDER 
+                WHERE DIT_SHIP_GROUP.ORDER_ID = DIT_ORDER.ORDER_ID AND 
+                DIT_SHIP_GROUP.STORE_LOC_ID = DIT_STORE_LOCATION.STORE_LOC_ID AND 
+                DIT_SHIP_GROUP.SHIP_GROUP_ID='%s'",
                 mysql_real_escape_string($bookingId));
             
             $result = mysql_query($dropOffQuery);
@@ -41,8 +42,8 @@ class Geographic
 
             if ($numrow>0) {
                 $loan_rowclient=mysql_fetch_array($result);
-                $dropOffLat = $loan_rowclient['d_geo_lat'];
-                $dropOffLong = $loan_rowclient['d_geo_long'];
+                $dropOffLat = $loan_rowclient['D_GEO_LAT'];
+                $dropOffLong = $loan_rowclient['D_GEO_LONG'];
                 
                 // Find deliveries within a specific radius based on coordinates
                 // of drop off location. 
@@ -50,13 +51,13 @@ class Geographic
                 // want to improve this logic to check full route using 
                 // center of minimum distance method
                 $query =sprintf("
-                    SELECT dit_ship_group.ship_group_id, dit_ship_group.order_id, dit_ship_group.store_loc_id, dit_store_location.*, dit_order.*,
-                (3959 * acos(cos(radians('%s')) * cos(radians(dit_order.d_geo_lat)) * cos(radians(dit_order.d_geo_long) - radians('%s')) + sin(radians('%s')) * sin(radians(dit_order.d_geo_lat)))) as distance
-                from dit_ship_group, dit_order, dit_store_location where dit_ship_group.order_id = dit_order.order_id and
-                dit_ship_group.store_loc_id = dit_store_location.store_loc_id and
-                (dit_ship_group.state = '0' or dit_ship_group.state is null)
-                having distance < '%s'
-                order by distance limit 0, 20",
+                    SELECT DIT_SHIP_GROUP.SHIP_GROUP_ID, DIT_SHIP_GROUP.ORDER_ID, DIT_SHIP_GROUP.STORE_LOC_ID, DIT_STORE_LOCATION.*, DIT_ORDER.*,
+                (3959 * ACOS(COS(RADIANS('%s')) * COS(RADIANS(DIT_ORDER.D_GEO_LAT)) * COS(RADIANS(DIT_ORDER.D_GEO_LONG) - RADIANS('%s')) + SIN(RADIANS('%s')) * SIN(RADIANS(DIT_ORDER.D_GEO_LAT)))) AS DISTANCE
+                FROM DIT_SHIP_GROUP, DIT_ORDER, DIT_STORE_LOCATION WHERE DIT_SHIP_GROUP.ORDER_ID = DIT_ORDER.ORDER_ID AND
+                DIT_SHIP_GROUP.STORE_LOC_ID = DIT_STORE_LOCATION.STORE_LOC_ID AND
+                (DIT_SHIP_GROUP.STATE = '0' OR DIT_SHIP_GROUP.STATE IS NULL)
+                HAVING DISTANCE < '%s'
+                ORDER BY DISTANCE LIMIT 0, 20",
                 mysql_real_escape_string($dropOffLat),
                 mysql_real_escape_string($dropOffLong),
                 mysql_real_escape_string($dropOffLat),
@@ -72,27 +73,27 @@ class Geographic
                 if($numrow>0) {
                     while ($loan_rowclient = mysql_fetch_array($result)) {
                         $data[] = array(
-                            'bookingId' => $loan_rowclient['ship_group_id'],                    
-                            'companyName' => $loan_rowclient['company_name'],
-                            'pAddr1'      => $loan_rowclient['store_address1'],
-                            'pAddr2' => $loan_rowclient['store_address2'],
-                            'pCity' => $loan_rowclient['store_city'],
-                            'pState' => $loan_rowclient['store_state'],
-                            'pZip' => $loan_rowclient['store_zip'],
-                            'pLat' => $loan_rowclient['p_geo_lat'],
-                            'pLng' => $loan_rowclient['p_geo_long'],
-                            'customerName' => $loan_rowclient['cust_name'],
-                            'cAddr1' => $loan_rowclient['dest_address_1'],
-                            'cAddr2' => $loan_rowclient['dest_address_2'],
-                            'cCity' => $loan_rowclient['dest_city'],
-                            'cState' => $loan_rowclient['dest_state'],
-                            'cZip' => $loan_rowclient['dest_zip'],
-                            'cLat' => $loan_rowclient['d_geo_lat'],
-                            'cLng' => $loan_rowclient['d_geo_long'],
-                            'bookingTime' => $loan_rowclient['submit_time'],
-                            'distance' => $loan_rowclient['distance'],
-                            'deFlag' => $loan_rowclient['dit_ship_group.state'],
-                            'driverId' => $loan_rowclient['assigned_driver_id']                        
+                            'bookingId' => $loan_rowclient['SHIP_GROUP_ID'],                    
+                            'companyName' => $loan_rowclient['COMPANY_NAME'],
+                            'pAddr1'      => $loan_rowclient['STORE_ADDRESS1'],
+                            'pAddr2' => $loan_rowclient['STORE_ADDRESS2'],
+                            'pCity' => $loan_rowclient['STORE_CITY'],
+                            'pState' => $loan_rowclient['STORE_STATE'],
+                            'pZip' => $loan_rowclient['STORE_ZIP'],
+                            'pLat' => $loan_rowclient['P_GEO_LAT'],
+                            'pLng' => $loan_rowclient['P_GEO_LONG'],
+                            'customerName' => $loan_rowclient['CUST_NAME'],
+                            'cAddr1' => $loan_rowclient['DEST_ADDRESS_1'],
+                            'cAddr2' => $loan_rowclient['DEST_ADDRESS_2'],
+                            'cCity' => $loan_rowclient['DEST_CITY'],
+                            'cState' => $loan_rowclient['DEST_STATE'],
+                            'cZip' => $loan_rowclient['DEST_ZIP'],
+                            'cLat' => $loan_rowclient['D_GEO_LAT'],
+                            'cLng' => $loan_rowclient['D_GEO_LONG'],
+                            'bookingTime' => $loan_rowclient['SUBMIT_TIME'],
+                            'distance' => $loan_rowclient['DISTANCE'],
+                            'deFlag' => $loan_rowclient['DIT_SHIP_GROUP.STATE'],
+                            'driverId' => $loan_rowclient['ASSIGNED_DRIVER_ID']                        
                         );
                     }
                 }                
@@ -143,7 +144,7 @@ class Geographic
                 throw new \Dit\Exception("Booking not found");
             }
             $dropOffLat     = $row['d_loc_lat'];
-            $dropOffLong    = $row['d_loc_long'];
+            $dropOffLng    = $row['d_loc_long'];
             $pickupLat      = $row['p_geo_lat'];
             $pickupLng      = $row['p_geo_long'];
 
@@ -154,47 +155,128 @@ class Geographic
             $driverLat = $driverLocation['loc_lat'];
             $driverLng = $driverLocation['loc_lng'];
 
+            // Find all stops along the path from driver to pickup location
+            $driverToPickupStops = \Dit\Google\Geographic::retrieveDirections(array($driverLat, $driverLng), array($pickupLat, $pickupLng));
+            $driverToPickupStops = $driverToPickupStops[0]['steps'];
+            $pickupToDropoffStops = \Dit\Google\Geographic::retrieveDirections(array($pickupLat, $pickupLng), array($dropOffLat, $dropOffLng));
+            $pickupToDropoffStops = $pickupToDropoffStops[0]['steps'];
+            // We need remove the last stop of $driverToPickupStops, it's pickup Location and in $pickupToDropoffStops already
+            array_pop($driverToPickupStops);
+            $stops = array_merge($driverToPickupStops, $pickupToDropoffStops);
+            // Clean stops - 2 stops need to have distance about 5 miles
+            $stops = self::cleanStops($stops);
             // Find routes
-            // Find all pickup locations within 5 miles radius from current driver location to original pickup location
-            $sql = "
-                SELECT group.ship_group_id, group.order_id, store.*, order.*,
-                (3959 * acos(cos(radians('%s')) * cos(radians(store.p_geo_lat)) * cos(radians(store.p_geo_long) - radians('%s')) + sin(radians('%s')) * sin(radians(store.p_geo_lat)))) as distance_pickup,
-                FROM dit_ship_group group
-                INNER JOIN dit_store_location store ON group.store_loc_id = store.store_loc_id
-                INNER JOIN dit_order order ON group.order_id = order.order_id
-                HAVING distance_pickup < ?
-                ORDER BY distance_pickup ASC
-                LIMIT 0, 20
-            ";            
-            $result1 = $db->query($sql, $driverLat, $driverLng, $driverLat, $maxDistance)->result_array*();
+            // Find all locations within 5 miles radius of each location in $stops
+            $pickupLocations = array();
+            $dropoffLocations = array();
+            foreach ($stops[0]['steps'] as $stop) {
+                // Pikcup
+                $sql = "
+                    SELECT GROUP.SHIP_GROUP_ID, GROUP.ORDER_ID, STORE.*
+                    (3959 * ACOS(COS(RADIANS(?)) * COS(RADIANS(STORE.P_GEO_LAT)) * COS(RADIANS(STORE.P_GEO_LONG) - RADIANS(?)) + SIN(RADIANS(?)) * SIN(RADIANS(STORE.P_GEO_LAT)))) AS DISTANCE,
+                    FROM DIT_SHIP_GROUP GROUP
+                    INNER JOIN DIT_STORE_LOCATION STORE ON GROUP.STORE_LOC_ID = STORE.STORE_LOC_ID
+                    WHERE (GROUP.STATE = '0' OR GROUP.STATE IS NULL) AND DISTANCE < ?
+                    ORDER BY DISTANCE ASC
+                    LIMIT 0, 20
+                ";            
+                $result = $db->query($sql, $stop['lat'], $stop['lng'], $stop['lat'], $maxDistance)->result_array();
+                foreach ($result as $row) {
+                    if (!isset($pickupLocations['SHIP_GROUP_ID'])) {
+                        $pickupLocations[$row['SHIP_GROUP_ID']] = $row;
+                    }
+                }
+                // Dropoff
+                $sql = "
+                    SELECT GROUP.SHIP_GROUP_ID, GROUP.ORDER_ID, ORDER.*,
+                    (3959 * ACOS(COS(RADIANS('?')) * COS(RADIANS(ORDER.D_GEO_LAT)) * COS(RADIANS(ORDER.D_GEO_LONG) - RADIANS('?')) + SIN(RADIANS('?')) * SIN(RADIANS(ORDER.D_GEO_LAT)))) AS DISTANCE,
+                    FROM DIT_SHIP_GROUP GROUP
+                    INNER JOIN DIT_ORDER ORDER ON GROUP.ORDER_ID = ORDER.ORDER_ID
+                    WHERE (GROUP.STATE = '0' OR GROUP.STATE IS NULL) AND DISTANCE < ?
+                    ORDER BY DISTANCE ASC
+                    LIMIT 0, 20
+                ";            
+                $result = $db->query($sql, $stop['lat'], $stop['lng'], $stop['lat'], $maxDistance)->result_array();
+                foreach ($result as $row) {
+                    if (!isset($dropoffLocations[$row['SHIP_GROUP_ID']])) {
+                        $dropoffLocations[$row['SHIP_GROUP_ID']] = $row;
+                    }
+                }
+            }
 
-            // Find all pickup locations within 5 miles radius from original pickup location to original dropoff location
-            $sql = "
-                SELECT group.ship_group_id, group.order_id, store.*, order.*,
-                (3959 * acos(cos(radians('%s')) * cos(radians(store.p_geo_lat)) * cos(radians(store.p_geo_long) - radians('%s')) + sin(radians('%s')) * sin(radians(store.p_geo_lat)))) as distance_pickup,
-                FROM dit_ship_group group
-                INNER JOIN dit_store_location store ON group.store_loc_id = store.store_loc_id
-                INNER JOIN dit_order order ON group.order_id = order.order_id
-                HAVING distance_pickup < ?
-                ORDER BY distance_pickup ASC
-                LIMIT 0, 20
-            ";            
-            $result2 = $db->query($sql, $driverLat, $driverLng, $driverLat, $maxDistance)->result_array();
-            $result = array_merge($result1, $result2);
+            // Now we have all pickable/dropable locations in $pickupLocations and $dropoffLocations
+            // We need to remove all dropoff that never pickup before
+            foreach ($dropoffLocations as $groupId => $row) {
+                if (!isset($pickupLocations[$groupId])) {
+                    unset($pickupLocations[$groupId]);
+                    continue;
+                }
+                if ($pickupLocations[$groupId]['DISTANCE_PICKUP'] > $row['DISTANCE_DROPOFF']) {
+                    unset($dropoffLocations[$groupId]);
+                    continue;
+                }
+            }
+
+            // We need to choose all ship groups that have pickup and dropoff within 5 miles radius
+            foreach ($pickupLocations as $groupId => $value) {
+                if (!isset($dropoffLocations[$groupId])) {
+                    unset($pickupLocations[$groupId]);
+                }
+            }
+
+            // Merge pickupLocations and dropoffLocations into one
+            $locations = array();
+            foreach ($pickupLocations as $location) {
+                $locations[] = $location;
+            }
+            foreach ($dropoffLocations as $location) {
+                $locations[] = $location;
+            }
+            // Then sort by distance
+            $totalLocations = count($locations);
+            for ($i = 0; $i < count($locations) - 1; $i++) {
+                for ($j = 1; $j < count($locations); $j++) {
+                    if ($locations[$i]['DISTANCE'] > $locations[$j]['DISTANCE']) {
+                        $tmp = $locations[$i];
+                        $locations[$i] = $locations[$j];
+                        $locations[$j] = $tmp;
+                    }
+                }
+            }
+            return $locations;
         }
+    }
+
+    public static function cleanStops(array $stops, $distance = 5)
+    {
+        $queue = array();
+        $queue[] = $stops[0];
+        $count = count($stops);
+        for ($index = 0; $index < $count; $index++) {
+            $from = $stops[$index];
+            $next = 1;
+            while (self::getDistanceInMiles($from, $stops[$index + $next]) < 5) {
+                $next++;
+            }
+            $queue[] = $stops[$index + $next];
+            $index = $index + $next - 1;
+        }
+        return $queue;
     }
 
     /**
      * Calculate distance in miles between 2 locations
      * http://stackoverflow.com/questions/17125608/php-distance-between-two-locations-approach
-     * @param  [type] $fromLat [description]
-     * @param  [type] $fromLng [description]
-     * @param  [type] $toLat   [description]
-     * @param  [type] $toLng   [description]
+     * @param  array $from  [lat, lng]
+     * @param  array $to    [lat, lng]
      * @return [type]          [description]
      */
-    private static function getDistance($fromLat, $fromLng, $toLat, $toLng)
+    public static function getDistanceInMiles(array $from, array $to)
     {
+        $fromLat = $from['lat'];
+        $fromLng = $from['lng'];
+        $toLat = $to['lat'];
+        $toLng = $to['lng'];
         $earthRadius = 3960.00; # in miles
         $deltaLat = $toLat - $fromLat ;
         $deltaLon = $toLng - $fromLng ;
@@ -215,12 +297,12 @@ class Geographic
      */
     public static function getDriverLocation($driverId)
     {
-        $sql = 'SELECT cur_loc_lat, cur_loc_lng FROM dit_driver WHERE driver_id = ?';
+        $sql = 'SELECT CUR_LOC_LAT, CUR_LOC_LNG FROM DIT_DRIVER WHERE DRIVER_ID = ?';
         $result = \Dit\Application::getInstance()->getDb()->query($sql, $driverId)->result_array();
         if (count($result) > 0) {
             return array(
-                'loc_lat'   => $result[0]['cur_loc_lat'],
-                'loc_lng'   => $result[0]['cur_loc_lng']
+                'loc_lat'   => $result[0]['CUR_LOC_LAT'],
+                'loc_lng'   => $result[0]['CUR_LOC_LNG']
             );
         } else {
             return false;
@@ -235,18 +317,19 @@ class Geographic
     public static function getBookingLocation($bookingId)
     {
         $dropOffQuery = "
-            SELECT dit_store_location.p_geo_lat, dit_store_location.p_geo_long, dit_order.d_geo_lat, dit_order.d_geo_long
-            FROM dit_ship_group, dit_store_location, dit_order 
-            WHERE dit_ship_group.order_id = dit_order.order_id and 
-            dit_ship_group.store_loc_id = dit_store_location.store_loc_id and 
-            dit_ship_group.ship_group_id='?'";
-        $result = \Dit\Application->getInstance()->getDb->query($dropOffQuery, $bookingId)->result_array();
+            SELECT DIT_STORE_LOCATION.P_GEO_LAT, DIT_STORE_LOCATION.P_GEO_LONG, DIT_ORDER.D_GEO_LAT, DIT_ORDER.D_GEO_LONG
+            FROM DIT_SHIP_GROUP, DIT_STORE_LOCATION, DIT_ORDER 
+            WHERE DIT_SHIP_GROUP.ORDER_ID = DIT_ORDER.ORDER_ID AND 
+            DIT_SHIP_GROUP.STORE_LOC_ID = DIT_STORE_LOCATION.STORE_LOC_ID AND 
+            DIT_SHIP_GROUP.SHIP_GROUP_ID='?'";
+        $result = \Dit\Application::getInstance()->getDb()->query($dropOffQuery, $bookingId)->result_array();
+
         if (count($result) > 0) {
             return array(
-                'd_loc_lat' => $row['d_geo_lat'],
-                'd_loc_lng' => $row['d_geo_long'],
-                'p_loc_lat' => $row['p_geo_lat'],
-                'p_loc_lng' => $row['p_geo_long']
+                'd_loc_lat' => $row['D_GEO_LAT'],
+                'd_loc_lng' => $row['D_GEO_LONG'],
+                'p_loc_lat' => $row['P_GEO_LAT'],
+                'p_loc_lng' => $row['P_GEO_LONG']
             );
         } else {
             return false;
